@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react'
 import clsx from 'clsx'
 import Footer from '@theme-original/DocItem/Footer'
-import { useDoc } from '@docusaurus/theme-common/internal'
 import styles from './styles.module.css'
 import { trackStructEvent } from '@snowplow/browser-tracker'
+import { useLocation } from '@docusaurus/router'
 
 function CommentBox({ handleSubmit, feedbackTextRef }) {
   const placeholder = 'How can we improve it?'
@@ -24,8 +24,8 @@ function CommentBox({ handleSubmit, feedbackTextRef }) {
   )
 }
 
-function Feedback() {
-  const { permalink } = useDoc().metadata
+export function Feedback() {
+  const permalink = useLocation().pathname
   const feedbackTextRef = useRef()
   const buttonLikeRef = useRef()
   const buttonDislikeRef = useRef()

@@ -1,0 +1,38 @@
+---
+position: 2
+title: Foo
+---
+
+```mdx-code-block
+import ReactPlayer from "react-player/youtube";
+```
+
+
+export const Highlight = ({children, color}) => (
+  <span
+    style={{
+      backgroundColor: color,
+      borderRadius: '2px',
+      color: '#fff',
+      padding: '0.2rem',
+    }}>
+    {children}
+  </span>
+);
+
+<Highlight color="#25c2a0">Docusaurus green</Highlight> and <Highlight color="#1877F2">Facebook blue</Highlight> are my favorite colors.
+
+<ReactPlayer url='https://www.youtube.com/watch?v=YSOntr9COeM' />
+
+I can write **Markdown** alongside my _JSX_!
+
+:::note
+
+  Use plugins to introduce shorter syntax for the most commonly used JSX
+  elements in your project.
+
+:::
+
+```rs
+test
+```
