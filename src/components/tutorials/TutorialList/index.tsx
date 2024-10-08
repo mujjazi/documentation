@@ -31,15 +31,32 @@ function TutorialCard({ tutorial }: { tutorial: Meta }) {
 
   return (
     <Card>
-      <Title>{tutorial.title}</Title>
-      <Topic label={tutorial.label} sx={{ mb: 2 }}></Topic>
-      <Description>{tutorial.description}</Description>
-      <StartButton
-        onClick={() => history.push(`/tutorials/${tutorial.id}`)}
-        endIcon={<ChevronRight />}
+      <Grid
+        sx={{ height: '100%' }}
+        container
+        direction="column"
+        justifyContent="space-between"
       >
-        Start Learning
-      </StartButton>
+        <Grid item container direction="column">
+          <Grid item>
+            <Title>{tutorial.title}</Title>
+          </Grid>
+          <Grid item>
+            <Topic label={tutorial.label} sx={{ mb: 2 }}></Topic>
+          </Grid>
+          <Grid item>
+            <Description>{tutorial.description}</Description>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <StartButton
+            onClick={() => history.push(`/tutorials/${tutorial.id}`)}
+            endIcon={<ChevronRight />}
+          >
+            Start Learning
+          </StartButton>
+        </Grid>
+      </Grid>
     </Card>
   )
 }
