@@ -20,7 +20,7 @@ export default function PaginatorNavButton(props: PaginatorNavButtonProps) {
       variant="outlined"
       sx={{
         transition: 'none', // Don't shift button up on hover
-        width: '240px',
+        minWidth: '240px',
         textTransform: 'none',
         border: `2px solid ${grey[300]}`,
         borderRadius: 1,

@@ -122,7 +122,7 @@ function TutorialItem({ content }: { content: Tutorial }) {
         <Box sx={{ margin: 4, mt: 3, height: '100%' }}>
           <Header title={content?.meta?.title} label={content?.meta?.label} />
           <Grid sx={{ mt: 2 }} wrap="nowrap" container item columnSpacing={4}>
-            <Grid item>
+            <Grid item xs={4}>
               <Steps
                 steps={steps}
                 activeStep={activeStep}
