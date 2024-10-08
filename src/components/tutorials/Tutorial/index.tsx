@@ -67,6 +67,9 @@ function TutorialItem({ content }: { content: Tutorial }) {
   const [steps, setSteps] = React.useState<MDXContent[]>([])
   const [activeStep, setActiveStep] = React.useState(() => {
     const storageKey = `tutorial:${content.meta.title}`
+    if (typeof window === 'undefined') {
+      return 0
+    }
     const storedStep = window.localStorage.getItem(storageKey)
     return storedStep ? parseInt(storedStep) : 0
   })
@@ -74,7 +77,9 @@ function TutorialItem({ content }: { content: Tutorial }) {
   // Update storage with the latest tutorial step viewed
   useEffect(() => {
     const storageKey = `tutorial:${content.meta.title}`
-    window.localStorage.setItem(storageKey, activeStep.toString())
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(storageKey, activeStep.toString())
+    }
   }, [activeStep])
 
   useEffect(() => {
