@@ -67,14 +67,14 @@ function TutorialItem({ content }: { content: Tutorial }) {
   const [steps, setSteps] = React.useState<MDXContent[]>([])
   const [activeStep, setActiveStep] = React.useState(() => {
     const storageKey = `tutorial:${content.meta.title}`
-    const storedStep = localStorage.getItem(storageKey)
+    const storedStep = window.localStorage.getItem(storageKey)
     return storedStep ? parseInt(storedStep) : 0
   })
 
   // Update storage with the latest tutorial step viewed
   useEffect(() => {
     const storageKey = `tutorial:${content.meta.title}`
-    localStorage.setItem(storageKey, activeStep.toString())
+    window.localStorage.setItem(storageKey, activeStep.toString())
   }, [activeStep])
 
   useEffect(() => {
