@@ -156,6 +156,7 @@ function TutorialList({
                   backgroundColor: 'white',
                   color: grey[800],
                   boxShadow: shadow,
+                  height: '44px',
                 }}
                 startAdornment={
                   <InputAdornment position="start">
@@ -182,14 +183,13 @@ function TutorialList({
                 width: '12rem',
                 mb: 4,
                 transformOrigin: 'top',
-                // Dropdowns are very slightly bigger than the search bar, so scale down
-                transform: 'scale(0.95)',
               }}
             >
               <Select
                 sx={{
                   backgroundColor: 'white',
                   color: grey[800],
+                  height: '44px',
                 }}
                 value={topic}
                 onChange={(e) => setTopic(e.target.value as TopicDropdown)}
