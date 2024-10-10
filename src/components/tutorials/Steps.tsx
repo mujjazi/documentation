@@ -123,7 +123,9 @@ export default function Steps({ steps }: { steps: Step[] }) {
             </ListItem>
           ))}
         </List>
-        <LastUpdated lastUpdatedAt={lastUpdated} />
+        <Box sx={{ pl: 2 }}>
+          <LastUpdated lastUpdatedAt={lastUpdated} />
+        </Box>
       </Box>
     </Paper>
   )
