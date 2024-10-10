@@ -2,6 +2,7 @@ import React from 'react'
 import { useHistory } from '@docusaurus/router'
 import Layout from '@theme/Layout'
 
+import Link from '@docusaurus/Link'
 import {
   Box,
   FormControl,
@@ -40,7 +41,12 @@ function TutorialCard({ tutorial }: { tutorial: Tutorial }) {
       >
         <Grid item container direction="column">
           <Grid item>
-            <Title>{tutorial.meta.title}</Title>
+            <Link
+              style={{ color: 'inherit', cursor: 'pointer' }}
+              to={stepToHistory(getSteps(tutorial.meta.id)[0])}
+            >
+              <Title>{tutorial.meta.title}</Title>
+            </Link>
           </Grid>
           <Grid item>
             <Topic label={tutorial.meta.label} sx={{ mb: 2 }}></Topic>
