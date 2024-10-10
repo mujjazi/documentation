@@ -151,7 +151,7 @@ function TutorialList({
 
   return (
     <Layout>
-      <Box paddingX={5} paddingY={4}>
+      <Box marginX={20} marginY={4}>
         <Header />
         <Grid container columnSpacing={2}>
           <Grid item>
