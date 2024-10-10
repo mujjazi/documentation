@@ -5,6 +5,7 @@ import LastUpdated from '@theme/LastUpdated'
 import { useHistory, useLocation } from '@docusaurus/router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle, faCircle } from '@fortawesome/free-regular-svg-icons'
+import { useTheme } from '@emotion/react'
 import {
   Box,
   List,
@@ -24,13 +25,22 @@ function ListIcon({
   selfPosition: number
   activePosition: number
 }): JSX.Element {
+  const theme = useTheme()
   const transform = { transform: 'translateY(-1px)' }
+
+  // This gives the warning:
+  // "Property 'palette' does not exist on type 'Theme'.ts(2339)
+  //
+  // Palette _does_ in fact exist on `theme`
+  // @ts-ignore
+  const color = theme.palette.primary.main
+
   if (selfPosition === activePosition) {
     return (
       <FontAwesomeIcon
         icon={faCircle}
         size="lg"
-        style={{ color: 'primary.main', ...transform }}
+        style={{ color, ...transform }}
       />
     )
   } else if (selfPosition < activePosition) {
@@ -82,8 +92,12 @@ export default function Steps({ steps }: { steps: Step[] }) {
             return
           }
           for (let node of Object.values(mut.addedNodes)) {
-            if (node instanceof HTMLElement && node.id === 'lastUpdated') {
-              setLastUpdated(parseInt(node.textContent || '0'))
+            if (
+              node instanceof HTMLElement &&
+              node.id === 'lastUpdated' &&
+              node.textContent
+            ) {
+              setLastUpdated(parseInt(node.textContent))
               observer.disconnect()
             }
           }
@@ -138,6 +152,7 @@ export default function Steps({ steps }: { steps: Step[] }) {
           ))}
         </List>
         <Box sx={{ pl: 2 }}>
+          {lastUpdated}
           <LastUpdated lastUpdatedAt={lastUpdated} />
         </Box>
       </Box>
