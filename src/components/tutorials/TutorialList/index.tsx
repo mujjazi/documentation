@@ -13,6 +13,7 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  Typography,
 } from '@mui/material'
 
 import { stepToHistory } from '../Steps'
@@ -44,7 +45,9 @@ function TutorialCard({ tutorial }: { tutorial: Tutorial }) {
               style={{ color: 'inherit', cursor: 'pointer' }}
               to={stepToHistory(getSteps(tutorial.meta.id)[0])}
             >
-              <Title>{tutorial.meta.title}</Title>
+              <Typography variant="h5" sx={{ fontSize: '18px', mb: 1 }}>
+                {tutorial.meta.title}
+              </Typography>
             </Link>
           </Grid>
           <Grid item>
