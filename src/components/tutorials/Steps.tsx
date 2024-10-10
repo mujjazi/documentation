@@ -75,6 +75,7 @@ export default function Steps({ steps }: { steps: Step[] }) {
                 setActiveStep(step)
               }}
               sx={{
+                cursor: 'pointer',
                 borderRadius: 1,
                 marginY: 1,
                 backgroundColor:
