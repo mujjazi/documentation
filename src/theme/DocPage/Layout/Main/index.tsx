@@ -48,18 +48,12 @@ function getSteps(location: Location): Step[] {
 }
 
 function getPrev(location: Location): Step | null {
-  console.log(location)
   const steps = getSteps(location)
   const asPath = steps.map((step) => stepToHistory(step))
   const current = asPath.findIndex((path) => {
-    console.log(location.pathname == path)
     return location.pathname == path || location.pathname == path + '/'
   })
-  console.log(current)
   if (current === -1) {
-    console.log(asPath)
-    console.log('location', location.pathname)
-    console.log('Could not find current step for getPrev')
     return null
   }
 
@@ -80,11 +74,9 @@ function getNext(location: Location): Step | null {
   })
 
   if (current === -1) {
-    console.log('Could not find current step for getNext')
     return null
   }
 
-  console.log(current, steps.length)
   if (current + 1 < steps.length) {
     const ret = steps[current + 1]
     ret.path = stepToHistory(ret)
@@ -166,7 +158,6 @@ export default function DocPageLayoutMain({
     setSteps(getSteps(location))
     setNext(getNext(location))
     setPrev(getPrev(location))
-    console.log(children)
   }, [location])
 
   if (isTutorial) {
