@@ -1,4 +1,8 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
+
+import LastUpdated from '@theme/LastUpdated'
+import { green, grey } from '@mui/material/colors'
+import { useHistory, useLocation } from '@docusaurus/router'
 import { CheckCircleOutline, CircleOutlined } from '@mui/icons-material'
 import {
   Box,
@@ -9,10 +13,8 @@ import {
   Paper,
   Typography,
 } from '@mui/material'
-import { grey, green } from '@mui/material/colors'
+
 import { Step } from '../models'
-import { useLocation, useHistory } from '@docusaurus/router'
-import LastUpdated from '@theme/LastUpdated'
 
 function ListIcon({
   selfPosition,

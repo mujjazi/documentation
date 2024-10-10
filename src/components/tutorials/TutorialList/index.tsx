@@ -1,32 +1,31 @@
 import React from 'react'
-import { useHistory } from '@docusaurus/router'
-import Layout from '@theme/Layout'
 
+import Layout from '@theme/Layout'
 import Link from '@docusaurus/Link'
+import { grey } from '@mui/material/colors'
+import { useHistory } from '@docusaurus/router'
+import { ChevronRight, Search } from '@mui/icons-material'
 import {
   Box,
   FormControl,
+  Grid,
   InputAdornment,
   MenuItem,
   OutlinedInput,
   Select,
-  Typography,
-  Grid,
 } from '@mui/material'
-import { grey } from '@mui/material/colors'
-import { ChevronRight, Search } from '@mui/icons-material'
 
+import { stepToHistory } from '../Steps'
+import { Grid as TutorialGrid } from './styledComponents'
+import { Step, Topic as TopicType, Tutorial } from '../models'
 import {
   Card,
+  Description,
+  shadow,
+  StartButton,
   Title,
   Topic,
-  Description,
-  StartButton,
-  shadow,
 } from './styledComponents'
-import { Tutorial, Meta, Topic as TopicType, Step } from '../models'
-import { Grid as TutorialGrid } from './styledComponents'
-import { stepToHistory } from '../Steps'
 
 function TutorialCard({ tutorial }: { tutorial: Tutorial }) {
   const history = useHistory()

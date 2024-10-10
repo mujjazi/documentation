@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 
-import { useHistory, useLocation } from '@docusaurus/router'
 import { Tab, Tabs } from '@mui/material'
+import { useHistory, useLocation } from '@docusaurus/router'
 
 enum DocsTab {
   Docs = '/docs',

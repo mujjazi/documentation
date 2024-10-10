@@ -1,7 +1,7 @@
 import React from 'react'
+
 import { Button } from '@mui/material'
 import { grey } from '@mui/material/colors'
-
 interface PaginatorNavButtonProps {
   title: string
   subLabel?: string

@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react'
+
 import clsx from 'clsx'
-import { useDocsSidebar } from '@docusaurus/theme-common/internal'
+import { Location } from 'history'
+
+import { Box, Grid } from '@mui/material'
+import { useLocation } from '@docusaurus/router'
+import PaginatorNavLink from '@theme/PaginatorNavLink'
 import type { Props } from '@theme/DocPage/Layout/Main'
+import { useDocsSidebar } from '@docusaurus/theme-common/internal'
 
 import styles from './styles.module.css'
-
-import Steps, { stepToHistory } from '../../../../components/tutorials/Steps'
-import { Meta, Step } from '../../../../components/tutorials/models'
-
-import { useLocation } from '@docusaurus/router'
 import { Header } from '../../../../components/tutorials/Tutorial'
-import { Grid, Box } from '@mui/material'
-import { Location } from 'history'
-import PaginatorNavLink from '@theme/PaginatorNavLink'
+import { Meta, Step } from '../../../../components/tutorials/models'
+import Steps, { stepToHistory } from '../../../../components/tutorials/Steps'
 
 function getMeta(location: Location): Meta {
   const locationSplit = location.pathname.split('/')
