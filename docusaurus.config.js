@@ -66,7 +66,19 @@ module.exports = {
     ],
   ],
 
-  plugins: [path.resolve(__dirname, 'plugins', 'tutorialPlugin')],
+  plugins: [
+    path.resolve(__dirname, 'plugins', 'tutorialPlugin'),
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'tutorials',
+        path: 'tutorials',
+        routeBasePath: 'tutorials',
+        sidebarPath: false,
+        showLastUpdateTime: false,
+      },
+    ],
+  ],
 
   stylesheets: [
     {

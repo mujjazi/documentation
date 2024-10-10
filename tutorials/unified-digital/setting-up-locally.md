@@ -1,6 +1,7 @@
 ---
-title: Settings up locally
-position: 2
+id: setting-up-locally
+title: Setting up locally
+position: 3
 ---
 
 

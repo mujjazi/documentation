@@ -1,6 +1,6 @@
 ---
 title: Viewing the Output Data
-position: 4
+position: 5
 ---
 
 We can go ahead and look at some of those outputs, so I've selected the views, sessions and users table and if we go and look at those we can see really kind of detailed tables.

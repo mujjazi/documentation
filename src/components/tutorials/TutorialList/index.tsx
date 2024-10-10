@@ -23,10 +23,11 @@ import {
   StartButton,
   shadow,
 } from './styledComponents'
-import { Tutorial, Meta, Topic as TopicType } from '../models'
+import { Tutorial, Meta, Topic as TopicType, Step } from '../models'
 import { Grid as TutorialGrid } from './styledComponents'
+import { stepToHistory } from '../Steps'
 
-function TutorialCard({ tutorial }: { tutorial: Meta }) {
+function TutorialCard({ tutorial }: { tutorial: Tutorial }) {
   const history = useHistory()
 
   return (
@@ -39,18 +40,22 @@ function TutorialCard({ tutorial }: { tutorial: Meta }) {
       >
         <Grid item container direction="column">
           <Grid item>
-            <Title>{tutorial.title}</Title>
+            <Title>{tutorial.meta.title}</Title>
           </Grid>
           <Grid item>
-            <Topic label={tutorial.label} sx={{ mb: 2 }}></Topic>
+            <Topic label={tutorial.meta.label} sx={{ mb: 2 }}></Topic>
           </Grid>
           <Grid item>
-            <Description>{tutorial.description}</Description>
+            <Description>{tutorial.meta.description}</Description>
           </Grid>
         </Grid>
         <Grid item>
           <StartButton
-            onClick={() => history.push(`/tutorials/${tutorial.id}`)}
+            onClick={() => {
+              const steps = getSteps(tutorial.meta.id)
+              const first = steps[0]
+              history.push(stepToHistory(first))
+            }}
             endIcon={<ChevronRight />}
           >
             Start Learning
@@ -94,14 +99,53 @@ const TopicDropdownValues: TopicDropdown[] = [
   ...Object.values(TopicType.Values),
 ]
 
-function TutorialList({ tutorials }: { tutorials: Record<string, unknown> }) {
+function getSteps(id: string): Step[] {
+  const context = require.context('@site/tutorials/', true)
+
+  // Filter to ones that are in the `tutorialname` dir
+  const steps = context
+    .keys()
+    .filter((key) => key.includes(id) && key.endsWith('md'))
+    .map((key) => [key, context(key)])
+    .map(([path, mdFile]) => Step.parse({ ...mdFile.frontMatter, path }))
+
+  steps.sort((a, b) => a.position - b.position)
+
+  return steps
+}
+
+function TutorialList({
+  tutorials,
+}: {
+  tutorials: Record<string, Record<string, unknown>>
+}) {
   const [search, setSearch] = React.useState('')
   const [topic, setTopic] = React.useState<TopicDropdown>('All topics')
   const [parsedTutorials, setParsedTutorials] = React.useState<Tutorial[]>([])
 
   React.useEffect(() => {
     setParsedTutorials(
-      Object.values(tutorials).map((data) => Tutorial.parse(data))
+      Object.values(tutorials).map((data) => {
+        data.files = getSteps(data.meta.id)
+        const parsedTutorials = Tutorial.parse(data)
+
+        // Ensure no duplicate positions
+        const duplicates = new Set<number>()
+        for (const step of parsedTutorials.files) {
+          if (duplicates.has(step.position)) {
+            throw new Error(
+              `Duplicate step position ${step.position} in tutorial "${parsedTutorials.meta.id}"` +
+                `\nCheck steps: \n${parsedTutorials.files
+                  .filter((s) => s.position === step.position)
+                  .map((s) => s.path)
+                  .join('\n')}\n`
+            )
+          }
+          duplicates.add(step.position)
+        }
+
+        return parsedTutorials
+      })
     )
   }, [tutorials])
 
@@ -176,7 +220,7 @@ function TutorialList({ tutorials }: { tutorials: Record<string, unknown> }) {
             .filter((tutorial: Tutorial) => searchFilter(search, tutorial))
             .filter((tutorial: Tutorial) => topicFilter(topic, tutorial))
             .map((tutorial: Tutorial) => (
-              <TutorialCard key={tutorial.meta.id} tutorial={tutorial.meta} />
+              <TutorialCard key={tutorial.meta.id} tutorial={tutorial} />
             ))}
         </TutorialGrid>
       </Box>

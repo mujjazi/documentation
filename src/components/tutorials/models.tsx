@@ -20,11 +20,19 @@ export const Meta = z.object({
 
 export type Meta = z.infer<typeof Meta>
 
+export const Step = z.object({
+  position: z.number(),
+  title: z.string(),
+  path: z.string(),
+})
+
+export type Step = z.infer<typeof Step>
+
 // The tutorial model
 // Files is an array of strings that represent the file paths to the tutorial steps
 export const Tutorial = z.object({
   meta: Meta,
-  files: z.array(z.string()),
+  files: z.array(Step),
 })
 
 export type Tutorial = z.infer<typeof Tutorial>

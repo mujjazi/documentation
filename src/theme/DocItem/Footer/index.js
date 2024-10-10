@@ -4,6 +4,7 @@ import Footer from '@theme-original/DocItem/Footer'
 import styles from './styles.module.css'
 import { trackStructEvent } from '@snowplow/browser-tracker'
 import { useLocation } from '@docusaurus/router'
+import { useDoc } from '@docusaurus/theme-common/internal'
 
 function CommentBox({ handleSubmit, feedbackTextRef }) {
   const placeholder = 'How can we improve it?'
@@ -25,7 +26,7 @@ function CommentBox({ handleSubmit, feedbackTextRef }) {
 }
 
 export function Feedback() {
-  const permalink = useLocation().pathname
+  const doc = useDoc()
   const feedbackTextRef = useRef()
   const buttonLikeRef = useRef()
   const buttonDislikeRef = useRef()
@@ -45,7 +46,7 @@ export function Feedback() {
     trackStructEvent({
       category: 'feedback',
       action: 'like',
-      label: permalink,
+      label: doc.permalink,
     })
   }
 
@@ -57,7 +58,7 @@ export function Feedback() {
     trackStructEvent({
       category: 'feedback',
       action: 'dislike',
-      label: permalink,
+      label: doc.permalink,
     })
   }
 
@@ -68,7 +69,7 @@ export function Feedback() {
     trackStructEvent({
       category: 'feedback',
       action: 'comment',
-      label: permalink,
+      label: doc.permalink,
       property: text,
     })
 
@@ -82,6 +83,16 @@ export function Feedback() {
   return (
     <footer>
       <div className={styles.feedbackPrompt}>
+        {/* This is a hack/workaround for tutorial pages
+          More specifically, we want to show the last updated time below the steps on the sidebar (src/components/tutorials/Steps.tsx) 
+          Since they are implemented above where DocProvider wraps the page, `useDoc` is not available 
+
+          Once we move to v3, we can use `lastUpdateUtils` (https://github.com/facebook/docusaurus/tree/main/packages/docusaurus-utils/src/lastUpdateUtils.ts)
+          to get the last updated time, as they will be exported
+         */}
+        <div id="lastUpdated" style={{ display: 'none' }}>
+          {doc.metadata.lastUpdatedAt}
+        </div>
         {/* This icon ("comment-dots") is part of the
         Font Awesome Free catalogue, covered by the CC BY 4.0 license.
         https://fontawesome.com/license/free

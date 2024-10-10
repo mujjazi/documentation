@@ -1,6 +1,6 @@
 ---
 title: Setting up via Snowplow Console
-position: 1
+position: 2
 ---
 
 # Setting up via Snowplow Console
