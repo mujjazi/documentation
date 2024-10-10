@@ -66,21 +66,6 @@ function TutorialCard({ tutorial }: { tutorial: Tutorial }) {
   )
 }
 
-function Header() {
-  return (
-    <Box>
-      <Typography fontWeight={500} variant="h4" component="h2" sx={{ mb: 1 }}>
-        Tutorials & Guides
-      </Typography>
-
-      <p>
-        Step-by-step instructions and expert tips to help you master new skills
-        and navigate through complex tasks.
-      </p>
-    </Box>
-  )
-}
-
 function searchFilter(term: string, tutorial?: Tutorial): boolean {
   return tutorial
     ? tutorial?.meta.title.toLowerCase().includes(term.toLowerCase())
@@ -152,7 +137,6 @@ function TutorialList({
   return (
     <Layout>
       <Box marginX={20} marginY={4}>
-        <Header />
         <Grid container columnSpacing={2}>
           <Grid item>
             <FormControl
