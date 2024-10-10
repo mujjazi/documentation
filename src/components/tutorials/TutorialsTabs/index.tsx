@@ -31,13 +31,36 @@ export default function DocsTutorialsTabs(): JSX.Element {
   }
 
   return (
+    // All this overflow needs to be visible for the indicator to be able to
+    // show against the bottom of the navbar, as it has padding surrounding it
     <Tabs
+      sx={{ overflow: 'visible', overflowX: 'visible' }}
       onChange={handleChange}
       value={tab}
-      TabIndicatorProps={{ sx: { height: '6px', transition: 'none' } }}
+      TabScrollButtonProps={{
+        sx: { overflow: 'visible', overflowX: 'visible' },
+      }}
+      TabIndicatorProps={{
+        sx: {
+          height: '4px',
+          transition: 'none',
+          transform: 'translateY(4px)',
+        },
+      }}
     >
-      <Tab value={DocsTab.Docs} label="Docs" />
-      <Tab value={DocsTab.Tutorials} label="Tutorials" />
+      {/* I can't find a way to style the scroller from the API provided, so we must resort to this */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html:
+            '.MuiTabs-scroller { overflow: visible !important; overflow-x: visible !important; }',
+        }}
+      />
+      <Tab value={DocsTab.Docs} label="Docs" sx={{ textTransform: 'none' }} />
+      <Tab
+        value={DocsTab.Tutorials}
+        label="Tutorials & Guides"
+        sx={{ textTransform: 'none' }}
+      />
     </Tabs>
   )
 }
