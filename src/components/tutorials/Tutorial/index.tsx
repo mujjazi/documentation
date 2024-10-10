@@ -17,7 +17,7 @@ export function Header({ title, label }: { title: string; label: string }) {
       </Grid>
       <Grid item container alignItems="center" columnSpacing={2}>
         <Grid item>
-          <Typography variant="h4" sx={{ fontSize: '28px' }}>
+          <Typography variant="h4" sx={{ fontSize: '28px', mt: 1 }}>
             {title}
           </Typography>
         </Grid>
