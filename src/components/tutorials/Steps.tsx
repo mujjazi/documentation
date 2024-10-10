@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react'
 
+import { grey } from '@mui/material/colors'
 import LastUpdated from '@theme/LastUpdated'
-import { green, grey } from '@mui/material/colors'
 import { useHistory, useLocation } from '@docusaurus/router'
-import { CheckCircleOutline, CircleOutlined } from '@mui/icons-material'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCheckCircle, faCircle } from '@fortawesome/free-regular-svg-icons'
 import {
   Box,
   List,
@@ -23,12 +24,25 @@ function ListIcon({
   selfPosition: number
   activePosition: number
 }): JSX.Element {
+  const transform = { transform: 'translateY(-1px)' }
   if (selfPosition === activePosition) {
-    return <CircleOutlined sx={{ color: 'primary.main' }} />
+    return (
+      <FontAwesomeIcon
+        icon={faCircle}
+        size="lg"
+        style={{ color: 'primary.main', ...transform }}
+      />
+    )
   } else if (selfPosition < activePosition) {
-    return <CheckCircleOutline sx={{ color: green[600] }} />
+    return (
+      <FontAwesomeIcon
+        icon={faCheckCircle}
+        size="lg"
+        style={{ color: '#039855', ...transform }}
+      />
+    )
   } else {
-    return <CircleOutlined />
+    return <FontAwesomeIcon size="lg" icon={faCircle} style={transform} />
   }
 }
 
