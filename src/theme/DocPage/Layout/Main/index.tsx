@@ -9,7 +9,7 @@ import Steps, { stepToHistory } from '../../../../components/tutorials/Steps'
 import { Meta, Step } from '../../../../components/tutorials/models'
 
 import { useLocation } from '@docusaurus/router'
-import { Header } from '../../../../components/Tutorials/Tutorial'
+import { Header } from '../../../../components/tutorials/Tutorial'
 import { Grid, Box } from '@mui/material'
 import { Location } from 'history'
 import PaginatorNavLink from '@theme/PaginatorNavLink'
