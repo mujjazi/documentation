@@ -43,6 +43,7 @@ export function stepToHistory(step: Step): string {
 export default function Steps({ steps }: { steps: Step[] }) {
   const location = useLocation()
   const history = useHistory()
+  const [lastUpdated, setLastUpdated] = React.useState<number>(0)
   const [activeStep, setActiveStep] = React.useState<Step>(() => {
     const locationSplit = location.pathname.split('/')
     const stepName = locationSplit[locationSplit.length - 1].replace('.md', '')
@@ -54,6 +55,13 @@ export default function Steps({ steps }: { steps: Step[] }) {
 
     return step
   })
+
+  useEffect(() => {
+    const element = document.getElementById('lastUpdated')
+    if (element) {
+      setLastUpdated(parseInt(element.textContent || '0'))
+    }
+  }, [])
 
   return (
     <Paper sx={{ height: 'fit-content' }}>
@@ -99,11 +107,7 @@ export default function Steps({ steps }: { steps: Step[] }) {
             </ListItem>
           ))}
         </List>
-        <LastUpdated
-          lastUpdatedAt={parseInt(
-            document.getElementById('lastUpdated')?.textContent || '0'
-          )}
-        />
+        <LastUpdated lastUpdatedAt={lastUpdated} />
       </Box>
     </Paper>
   )
