@@ -6,14 +6,12 @@ export const Grid = styled(Box)(({ theme }) => ({
   gridTemplateColumns: 'repeat(auto-fill, minMax(390px, 1fr))',
   columnGap: theme.spacing(2),
   rowGap: theme.spacing(2),
-  gridAutoRows: 'minMax(240px, 1fr)',
+  gridAutoRows: 'minMax(204px, 1fr)',
 }))
 
 export const Card = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   flexDirection: 'column',
-  height: '100%',
-  width: '100%',
 }))
 
 export const Title = styled(Box)(({ theme }) => ({
@@ -31,6 +29,11 @@ export const Topic = styled(Chip)(({ theme }) => ({
 export const Description = styled(Box)(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
   marginBottom: theme.spacing(2),
+  display: ['block', '-webkit-box'], // First fallback to "block" if "-webkit-box" is not supported
+  WebkitLineClamp: '2',
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
 }))
 
 export const shadow =

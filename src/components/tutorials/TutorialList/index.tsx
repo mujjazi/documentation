@@ -33,12 +33,7 @@ function TutorialCard({ tutorial }: { tutorial: Tutorial }) {
 
   return (
     <Card>
-      <Grid
-        sx={{ height: '100%' }}
-        container
-        direction="column"
-        justifyContent="space-between"
-      >
+      <Grid container direction="column" justifyContent="space-between">
         <Grid item container direction="column">
           <Grid item>
             <Link
