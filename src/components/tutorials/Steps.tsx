@@ -60,6 +60,21 @@ export default function Steps({ steps }: { steps: Step[] }) {
     const element = document.getElementById('lastUpdated')
     if (element) {
       setLastUpdated(parseInt(element.textContent || '0'))
+    } else {
+      // Set up mutation observer to wait for the id
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mut) => {
+          if (!mut.addedNodes) {
+            return
+          }
+          for (let node of Object.values(mut.addedNodes)) {
+            if (node instanceof HTMLElement && node.id === 'lastUpdated') {
+              setLastUpdated(parseInt(node.textContent || '0'))
+              observer.disconnect()
+            }
+          }
+        })
+      })
     }
   }, [])
 
