@@ -8,6 +8,7 @@ import { faCheckCircle, faCircle } from '@fortawesome/free-regular-svg-icons'
 import { useTheme } from '@emotion/react'
 import {
   Box,
+  Grid,
   List,
   ListItem,
   ListItemIcon,
@@ -28,7 +29,7 @@ function ListIcon({
   const theme = useTheme()
   const transform = { transform: 'translateY(-1px)' }
 
-  // This gives the warning:
+  // This gives the error:
   // "Property 'palette' does not exist on type 'Theme'.ts(2339)
   //
   // Palette _does_ in fact exist on `theme`
@@ -64,26 +65,22 @@ export function stepToHistory(step: Step): string {
   return `/tutorials/${tutorial}/${file}`
 }
 
-export default function Steps({ steps }: { steps: Step[] }) {
-  const location = useLocation()
+export default function Steps({
+  steps,
+  activeStep,
+  setActiveStep,
+}: {
+  steps: Step[]
+  activeStep: Step
+  setActiveStep: (step: Step) => void
+}): JSX.Element {
   const history = useHistory()
-  const [lastUpdated, setLastUpdated] = React.useState<number>(0)
-  const [activeStep, setActiveStep] = React.useState<Step>(() => {
-    const locationSplit = location.pathname.split('/')
-    const stepName = locationSplit[locationSplit.length - 1].replace('.md', '')
-    const step = steps.find((step) => step.path.includes(stepName))
-
-    if (!step) {
-      return steps[0]
-    }
-
-    return step
-  })
+  const [lastUpdated, setLastUpdated] = React.useState<string>('')
 
   useEffect(() => {
     const element = document.getElementById('lastUpdated')
     if (element) {
-      setLastUpdated(parseInt(element.textContent || '0'))
+      setLastUpdated(element.textContent || '')
     } else {
       // Set up mutation observer to wait for the id
       const observer = new MutationObserver((mutations) => {
@@ -97,7 +94,7 @@ export default function Steps({ steps }: { steps: Step[] }) {
               node.id === 'lastUpdated' &&
               node.textContent
             ) {
-              setLastUpdated(parseInt(node.textContent))
+              setLastUpdated(node.textContent)
               observer.disconnect()
             }
           }
@@ -122,11 +119,13 @@ export default function Steps({ steps }: { steps: Step[] }) {
                 borderRadius: 1,
                 marginY: 1,
                 backgroundColor:
-                  activeStep.position === step.position ? grey[200] : 'white',
+                  activeStep.position === step.position
+                    ? grey[200]
+                    : 'var(--mui-palette-background-paper)',
                 color:
                   activeStep.position === step.position
                     ? 'primary.main'
-                    : 'black',
+                    : 'var(--mui-palette-text-primary)',
               }}
             >
               <ListItemIcon
@@ -151,9 +150,15 @@ export default function Steps({ steps }: { steps: Step[] }) {
             </ListItem>
           ))}
         </List>
-        <Box sx={{ pl: 2 }}>
-          {lastUpdated}
-          <LastUpdated lastUpdatedAt={lastUpdated} />
+        <Box sx={{ pl: 2, mb: 1 }}>
+          <Typography variant="body2">
+            <Grid container columnGap={'4px'}>
+              <Typography variant="body2">Last updated on </Typography>
+              <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                {lastUpdated}
+              </Typography>
+            </Grid>
+          </Typography>
         </Box>
       </Box>
     </Paper>

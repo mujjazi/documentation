@@ -40,7 +40,7 @@ export const shadow =
   '0px 0px 2px 0px rgba(16, 24, 40, 0.06), 0px 1px 3px 0px rgba(16, 24, 40, 0.1);'
 
 export const StartButton = styled(Button)(({ theme }) => ({
-  color: '#1D2939',
+  color: 'var(--mui-palette-text-primary)',
   textTransform: 'none',
   border: '1px solid ' + grey[300],
   paddingLeft: theme.spacing(2),

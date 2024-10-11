@@ -75,7 +75,7 @@ module.exports = {
         path: 'tutorials',
         routeBasePath: 'tutorials',
         sidebarPath: false,
-        showLastUpdateTime: false,
+        showLastUpdateTime: true,
       },
     ],
   ],
@@ -106,8 +106,13 @@ module.exports = {
         },
         items: [
           {
-            type: 'custom-docsTutorialsTabs',
+            type: 'custom-docsTutorialsTabsDesktop',
             position: 'left',
+          },
+          {
+            type: 'custom-docsTutorialsTabsMobile',
+            position: 'left',
+            className: 'mobile-only',
           },
           {
             href: 'https://discourse.snowplow.io',

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 
 import clsx from 'clsx'
 import { Location } from 'history'
@@ -13,6 +13,8 @@ import styles from './styles.module.css'
 import { Header } from '../../../../components/tutorials/Tutorial'
 import { Meta, Step } from '../../../../components/tutorials/models'
 import Steps, { stepToHistory } from '../../../../components/tutorials/Steps'
+
+import { useWindowSize } from '@docusaurus/theme-common'
 
 function getMeta(location: Location): Meta {
   const locationSplit = location.pathname.split('/')
@@ -89,9 +91,13 @@ function getNext(location: Location): Step | null {
 function Paginators({
   next,
   prev,
+  setActiveStep,
+  isMobile = false,
 }: {
   next: Step | null
   prev: Step | null
+  setActiveStep: (step: Step) => void
+  isMobile: boolean
 }): JSX.Element {
   return (
     <Box
@@ -101,10 +107,16 @@ function Paginators({
         justifyContent: 'space-between',
       }}
     >
-      <Grid justifyContent="space-between" container columnSpacing={2}>
+      <Grid
+        justifyContent="space-between"
+        direction={isMobile ? 'column' : 'row'}
+        container
+        columnSpacing={2}
+      >
         <Grid item xs={6}>
           {prev ? (
             <PaginatorNavLink
+              onClick={() => setActiveStep(prev)}
               isNext={false}
               permalink={prev.path}
               title={prev.title}
@@ -119,6 +131,7 @@ function Paginators({
         {next && (
           <Grid item xs={6}>
             <PaginatorNavLink
+              onClick={() => setActiveStep(next)}
               isNext={true}
               permalink={next.path}
               title={next.title}
@@ -127,7 +140,7 @@ function Paginators({
           </Grid>
         )}
       </Grid>
-      <Box className="col col--3"></Box>
+      {!isMobile && <Box className="col col--3"></Box>}
     </Box>
   )
 }
@@ -144,9 +157,26 @@ export default function DocPageLayoutMain({
   const [steps, setSteps] = React.useState(() =>
     isTutorial ? getSteps(location) : []
   )
-  const [meta, setMeta] = React.useState<Meta | null>(null)
-  const [next, setNext] = React.useState<Step | null>(null)
-  const [prev, setPrev] = React.useState<Step | null>(null)
+  const [activeStep, setActiveStep] = React.useState<Step>(() => {
+    const locationSplit = location.pathname.split('/')
+    const stepName = locationSplit[locationSplit.length - 1].replace('.md', '')
+    const step = steps.find((step) => step.path.includes(stepName))
+
+    if (!step) {
+      return steps[0]
+    }
+
+    return step
+  })
+  const [meta, setMeta] = useState<Meta | null>(null)
+  const [next, setNext] = useState<Step | null>(null)
+  const [prev, setPrev] = useState<Step | null>(null)
+  const windowSize = useWindowSize()
+  const [isMobile, setIsMobile] = useState(windowSize === 'mobile')
+
+  useEffect(() => {
+    setIsMobile(windowSize === 'mobile')
+  }, [windowSize])
 
   useEffect(() => {
     setIsTutorial(location.pathname.startsWith('/tutorials'))
@@ -169,38 +199,27 @@ export default function DocPageLayoutMain({
             styles.docMainContainerEnhanced
         )}
       >
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-                    .pagination-nav {
-                        margin-top: 2rem;
-                    }
-                    
-                    .feedbackPrompt_src-theme-DocItem-Footer-styles-module {
-                      margin-top: 3rem
-                    }
-                `,
-          }}
-        />
-
-        <Grid container sx={{ m: 3 }} columnSpacing={5}>
-          <Grid container item direction="column">
-            <Grid item>
-              <Header title={meta?.title || ''} label={meta?.label || ''} />
-            </Grid>
-            <Grid container item wrap="nowrap" columnGap={5}>
-              <Grid item xs={4}>
-                <Steps steps={steps} />
-              </Grid>
-              <Grid item container>
-                <Grid sx={{ width: '100%' }} item>
-                  {children}
-                </Grid>
-                <Paginators next={next} prev={prev} />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
+        {isMobile ? (
+          <Mobile
+            children={children}
+            meta={meta}
+            steps={steps}
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+            next={next}
+            prev={prev}
+          />
+        ) : (
+          <Desktop
+            children={children}
+            meta={meta}
+            steps={steps}
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+            next={next}
+            prev={prev}
+          />
+        )}
       </main>
     )
   }
@@ -221,5 +240,135 @@ export default function DocPageLayoutMain({
         {children}
       </div>
     </main>
+  )
+}
+
+function Mobile({
+  children,
+  meta,
+  steps,
+  activeStep,
+  setActiveStep,
+  next,
+  prev,
+}: {
+  children: ReactNode
+  meta: Meta | null
+  steps: Step[]
+  activeStep: Step
+  setActiveStep: (step: Step) => void
+  next: Step | null
+  prev: Step | null
+}): JSX.Element {
+  return (
+    <>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+          .pagination-nav {
+              margin-top: 2rem;
+          }
+          
+          .feedbackPrompt_src-theme-DocItem-Footer-styles-module {
+            margin-top: 3rem;
+          }
+
+      `,
+        }}
+      />
+
+      <Grid
+        sx={{ m: 2, mt: 0 }}
+        rowSpacing={2}
+        container
+        direction="column"
+        wrap="nowrap"
+      >
+        <Grid item>
+          <Header title={meta?.title || ''} label={meta?.label || ''} />
+        </Grid>
+        <Grid item xs={4}>
+          <Steps
+            steps={steps}
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+          />
+        </Grid>
+        <Grid item>{children}</Grid>
+        <Paginators
+          next={next}
+          prev={prev}
+          setActiveStep={setActiveStep}
+          isMobile={true}
+        />
+      </Grid>
+    </>
+  )
+}
+
+function Desktop({
+  children,
+  meta,
+  steps,
+  activeStep,
+  setActiveStep,
+  next,
+  prev,
+}: {
+  children: ReactNode
+  meta: Meta | null
+  steps: Step[]
+  activeStep: Step
+  setActiveStep: (step: Step) => void
+  next: Step | null
+  prev: Step | null
+}): JSX.Element {
+  return (
+    <>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+          .pagination-nav {
+              margin-top: 2rem;
+          }
+          
+          .feedbackPrompt_src-theme-DocItem-Footer-styles-module {
+            margin-top: 3rem
+          }
+
+          .theme-doc-footer-edit-meta-row {
+            display: none;
+          }
+      `,
+        }}
+      />
+
+      <Grid container sx={{ m: 3 }} columnSpacing={5}>
+        <Grid container item direction="column">
+          <Grid item>
+            <Header title={meta?.title || ''} label={meta?.label || ''} />
+          </Grid>
+          <Grid container item wrap="nowrap" columnGap={5}>
+            <Grid item xs={4}>
+              <Steps
+                steps={steps}
+                activeStep={activeStep}
+                setActiveStep={setActiveStep}
+              />
+            </Grid>
+            <Grid item container>
+              <Grid sx={{ width: '100%' }} item>
+                {children}
+              </Grid>
+              <Paginators
+                next={next}
+                prev={prev}
+                setActiveStep={setActiveStep}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </>
   )
 }

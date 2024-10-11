@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import Layout from '@theme/Layout'
 import Link from '@docusaurus/Link'
@@ -28,9 +28,10 @@ import {
   Topic,
 } from './styledComponents'
 
+import { useWindowSize } from '@docusaurus/theme-common'
+
 function TutorialCard({ tutorial }: { tutorial: Tutorial }) {
   const history = useHistory()
-
   return (
     <Card>
       <Grid container direction="column" justifyContent="space-between">
@@ -107,11 +108,18 @@ function TutorialList({
 }: {
   tutorials: Record<string, Record<string, unknown>>
 }) {
-  const [search, setSearch] = React.useState('')
-  const [topic, setTopic] = React.useState<TopicDropdown>('All topics')
-  const [parsedTutorials, setParsedTutorials] = React.useState<Tutorial[]>([])
+  const [search, setSearch] = useState('')
+  const [topic, setTopic] = useState<TopicDropdown>('All topics')
+  const [parsedTutorials, setParsedTutorials] = useState<Tutorial[]>([])
+  const windowSize = useWindowSize()
+  const [isMobile, setIsMobile] = useState(windowSize === 'mobile')
 
-  React.useEffect(() => {
+  useEffect(() => {
+    setIsMobile(windowSize === 'mobile')
+    console.log(isMobile)
+  }, [windowSize])
+
+  useEffect(() => {
     setParsedTutorials(
       Object.values(tutorials).map((data) => {
         data.files = getSteps(data.meta.id)
@@ -137,69 +145,66 @@ function TutorialList({
     )
   }, [tutorials])
 
+  return isMobile ? (
+    <MobileTutorialList
+      search={search}
+      setSearch={setSearch}
+      topic={topic}
+      setTopic={setTopic}
+      parsedTutorials={parsedTutorials}
+    />
+  ) : (
+    <DesktopTutorialList
+      search={search}
+      setSearch={setSearch}
+      topic={topic}
+      setTopic={setTopic}
+      parsedTutorials={parsedTutorials}
+    />
+  )
+}
+
+function MobileTutorialList({
+  search,
+  setSearch,
+  topic,
+  setTopic,
+  parsedTutorials,
+}) {
   return (
     <Layout>
-      <Box marginX={20} marginY={4}>
-        <Grid container columnSpacing={2}>
-          <Grid item>
-            <FormControl
-              variant="outlined"
-              sx={{
-                width: '22rem',
-                mb: 4,
-              }}
-            >
-              <OutlinedInput
-                sx={{
-                  backgroundColor: 'white',
-                  color: grey[800],
-                  boxShadow: shadow,
-                  height: '44px',
-                }}
-                startAdornment={
-                  <InputAdornment position="start">
-                    <Search
-                      sx={{
-                        color: 'rgba(102, 56, 184, 1)',
-                      }}
-                    />
-                  </InputAdornment>
-                }
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search by name of the tutorial or guide..."
-              />
-            </FormControl>
-          </Grid>
+      <Box>
+        <Grid container direction="column">
+          <SearchBar setSearch={setSearch} />
+          <TopicFilter topic={topic} setTopic={setTopic} />
+        </Grid>
 
-          {/* Dropdown for filtering by topic */}
-          <Grid item>
-            <FormControl
-              variant="outlined"
-              sx={{
-                border: grey[300],
-                boxShadow: shadow,
-                width: '12rem',
-                mb: 4,
-                transformOrigin: 'top',
-              }}
-            >
-              <Select
-                sx={{
-                  backgroundColor: 'white',
-                  color: grey[800],
-                  height: '44px',
-                }}
-                value={topic}
-                onChange={(e) => setTopic(e.target.value as TopicDropdown)}
-              >
-                {TopicDropdownValues.map((topic) => (
-                  <MenuItem key={topic} value={topic}>
-                    {topic}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+        <TutorialGrid mb={2}>
+          {parsedTutorials
+            .filter((tutorial: Tutorial) => searchFilter(search, tutorial))
+            .filter((tutorial: Tutorial) => topicFilter(topic, tutorial))
+            .map((tutorial: Tutorial) => (
+              <TutorialCard key={tutorial.meta.id} tutorial={tutorial} />
+            ))}
+        </TutorialGrid>
+      </Box>
+    </Layout>
+  )
+}
+
+function DesktopTutorialList({
+  search,
+  setSearch,
+  topic,
+  setTopic,
+  parsedTutorials,
+}) {
+  return (
+    <Layout>
+      <Box marginX={8} marginY={3}>
+        <Grid container columnSpacing={2}>
+          <SearchBar setSearch={setSearch} />
+          <TopicFilter topic={topic} setTopic={setTopic} />
         </Grid>
 
         <TutorialGrid mb={2}>
@@ -216,3 +221,70 @@ function TutorialList({
 }
 
 export default TutorialList
+
+function SearchBar({ setSearch }) {
+  return (
+    <Grid item>
+      <FormControl
+        variant="outlined"
+        sx={{
+          width: '22rem',
+          mb: 4,
+        }}
+      >
+        <OutlinedInput
+          sx={{
+            backgroundColor: 'var(--mui-palette-background-paper)',
+            color: 'var(--mui-palette-text-primary)',
+            boxShadow: shadow,
+            height: '44px',
+          }}
+          startAdornment={
+            <InputAdornment position="start">
+              <Search
+                sx={{
+                  color: 'rgba(102, 56, 184, 1)',
+                }}
+              />
+            </InputAdornment>
+          }
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by name of the tutorial or guide..."
+        />
+      </FormControl>
+    </Grid>
+  )
+}
+
+function TopicFilter({ topic, setTopic }) {
+  return (
+    <Grid item>
+      <FormControl
+        variant="outlined"
+        sx={{
+          border: grey[300],
+          boxShadow: shadow,
+          width: '12rem',
+          mb: 4,
+          transformOrigin: 'top',
+        }}
+      >
+        <Select
+          sx={{
+            backgroundColor: 'var(--mui-palette-background-paper)',
+            color: 'var(--mui-palette-text-primary)',
+            height: '44px',
+          }}
+          value={topic}
+          onChange={(e) => setTopic(e.target.value as TopicDropdown)}
+        >
+          {TopicDropdownValues.map((topic) => (
+            <MenuItem key={topic} value={topic}>
+              {topic}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Grid>
+  )
+}

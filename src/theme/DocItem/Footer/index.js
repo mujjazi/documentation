@@ -91,7 +91,7 @@ export function Feedback() {
           to get the last updated time, as they will be exported
          */}
         <div id="lastUpdated" style={{ display: 'none' }}>
-          {doc.metadata.lastUpdatedAt}
+          {doc.metadata.formattedLastUpdatedAt}
         </div>
         {/* This icon ("comment-dots") is part of the
         Font Awesome Free catalogue, covered by the CC BY 4.0 license.
